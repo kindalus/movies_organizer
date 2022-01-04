@@ -25,6 +25,11 @@ func NewOmdb(key string) organizer.MoviesDatabase {
 }
 
 func (db *omdb) Find(title string, year uint16) (*organizer.MovieSpec, error) {
+
+	if title == "" {
+		return nil, organizer.ErrEmptyTitle
+	}
+
 	imdbId, err := db.findMovieImdbId(title, year)
 	if err != nil {
 		return nil, err

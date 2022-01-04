@@ -1,6 +1,11 @@
 package organizer
 
-import "path"
+import (
+	"errors"
+	"path"
+)
+
+var ErrBadFilename = errors.New("@ErrBadFilename")
 
 type OrganizerContext struct {
 	StorageProvider StorageProvider
@@ -35,6 +40,9 @@ func (o *Organizer) Organize(moviePath string) (string, error) {
 	}
 
 	name, year := o.MoviePathParser.Parse(moviePath)
+	if name == "" || year == 0 {
+		return "", ErrBadFilename
+	}
 
 	spec, err := o.MoviesDatabase.Find(name, year)
 	if err != nil {

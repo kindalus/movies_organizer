@@ -42,12 +42,16 @@ func main() {
 	}
 
 	for _, movie := range args[1:] {
-		fmt.Println("Movie:", movie)
+		fmt.Println("\nMovie:", movie)
 
 		result, err := organizer.Organize(movie)
 
+		if err != nil {
+			fmt.Println("Error:", err)
+			continue
+		}
+
 		fmt.Println("Result:", result)
-		fmt.Println("Error:", err)
 	}
 }
 

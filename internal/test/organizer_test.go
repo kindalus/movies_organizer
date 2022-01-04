@@ -52,6 +52,18 @@ func TestOrganizer_Organize(t *testing.T) {
 		assert.Equal(t, organizer.ErrNoMovieGiven, err)
 	})
 
+	t.Run("Devolve erro @ErrBadFilename se o nome filme não tiver o formato adequado", func(t *testing.T) {
+
+		parser := mocks.NewMoviePathParser()
+		parser.On("Parse", mock.Anything).Return("", 0, nil)
+
+		moviesOrganizer, _ := newOrganizer(organizer.OrganizerContext{MoviePathParser: parser}, "")
+
+		_, err := moviesOrganizer.Organize("Xpto")
+
+		assert.Equal(t, organizer.ErrBadFilename, err)
+	})
+
 	t.Run("Constroi a directoria de destino com o formato [Base Dir]_[Ano]_[Genero]_[Movie Path]", func(t *testing.T) {
 		destPath := "/downloads/movies"
 		moviePath := "/movies/The.Good.Movie.2021.1080p"

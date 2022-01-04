@@ -4,6 +4,7 @@ import (
 	"kindalus/movies_organizer/internal/mocks"
 	"kindalus/movies_organizer/internal/organizer"
 	"kindalus/movies_organizer/internal/stubs"
+	. "kindalus/movies_organizer/pkg/coalesce"
 	"path"
 	"testing"
 
@@ -15,6 +16,7 @@ import (
 // Devolve a directoria onde foi arrumada ou error
 
 func TestOrganizer_Organize(t *testing.T) {
+
 	t.Run("Devolve erro @ErrDestinationPathNotFound se a directoria de destino não existir", func(t *testing.T) {
 		destPath := "/tmp/movies"
 		storageProvider := mocks.NewStorageProvider()
@@ -120,17 +122,9 @@ func TestOrganizer_Organize(t *testing.T) {
 func newOrganizer(ctx organizer.OrganizerContext, basePath string) (*organizer.Organizer, error) {
 	return organizer.New(
 		organizer.OrganizerContext{
-			StorageProvider: coalesce(ctx.StorageProvider, stubs.NewStorageProvider()),
-			MoviesDatabase:  coalesce(ctx.MoviesDatabase, stubs.NewMoviesDatabase()),
-			MoviePathParser: coalesce(ctx.MoviePathParser, stubs.NewMoviePathParser()),
+			StorageProvider: Coalesce(ctx.StorageProvider, stubs.NewStorageProvider()),
+			MoviesDatabase:  Coalesce(ctx.MoviesDatabase, stubs.NewMoviesDatabase()),
+			MoviePathParser: Coalesce(ctx.MoviePathParser, stubs.NewMoviePathParser()),
 		},
 		basePath)
-}
-
-func coalesce[T any](a T, b T) T {
-	if interface{}(a) == nil {
-		return b
-	}
-
-	return a
 }

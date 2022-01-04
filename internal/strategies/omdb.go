@@ -19,9 +19,9 @@ type omdb struct {
 	baseUrl string
 }
 
-func NewOmdb(key string) (organizer.MoviesDatabase, error) {
+func NewOmdb(key string) organizer.MoviesDatabase {
 
-	return &omdb{omdbUrl + key}, nil
+	return &omdb{omdbUrl + key}
 }
 
 func (db *omdb) Find(title string, year uint16) (*organizer.MovieSpec, error) {

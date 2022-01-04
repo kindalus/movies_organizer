@@ -9,10 +9,9 @@ import (
 func TestNewOMDB(t *testing.T) {
 	t.Run("Deve retornar o Matrix de 1999",
 		func(t *testing.T) {
-			omdb, errNewOmdb := NewOmdb("4be87309")
+			omdb := NewOmdb("4be87309")
 			spec, errFind := omdb.Find("The Matrix", 1999)
 
-			assert.Nil(t, errNewOmdb)
 			assert.Nil(t, errFind)
 
 			assert.Equal(t, spec.Title, "The Matrix")

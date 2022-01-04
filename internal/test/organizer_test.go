@@ -94,7 +94,7 @@ func TestOrganizer_Organize(t *testing.T) {
 		storage.On("DirExists", path.Join(destPath, "2001", "Comedy")).Return(false, nil)
 		storage.On("DirExists", mock.Anything).Return(true, nil)
 		storage.On("Move", mock.Anything, mock.Anything).Return(nil)
-		storage.On("MkDir", path.Join(destPath, "2001", "Comedy")).Return(nil)
+		storage.On("Mkdir", path.Join(destPath, "2001", "Comedy")).Return(nil)
 
 		mdb := mocks.NewMoviesDatabase()
 		mdb.On("Find", "Along Came Polly").

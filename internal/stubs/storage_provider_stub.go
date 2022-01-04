@@ -17,6 +17,6 @@ func (m *storageProviderStub) Move(source string, destination string) error {
 	return nil
 }
 
-func (m *storageProviderStub) MkDir(path string) error {
+func (m *storageProviderStub) Mkdir(path string) error {
 	return nil
 }

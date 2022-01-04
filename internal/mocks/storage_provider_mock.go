@@ -22,7 +22,7 @@ func (m *storageProviderMock) Move(source string, destination string) error {
 	return args.Error(0)
 }
 
-func (m *storageProviderMock) MkDir(path string) error {
+func (m *storageProviderMock) Mkdir(path string) error {
 	args := m.Called(path)
 
 	return args.Error(0)

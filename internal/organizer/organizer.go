@@ -63,7 +63,7 @@ func (o *Organizer) createFolderIfDoesntExist(destinationPath string) error {
 		return nil
 	}
 
-	return o.StorageProvider.MkDir(destinationPath)
+	return o.StorageProvider.Mkdir(destinationPath)
 }
 
 func (o *Organizer) verifyDir(path string, onError error) error {

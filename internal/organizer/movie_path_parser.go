@@ -1,5 +1,5 @@
 package organizer
 
 type MoviePathParser interface {
-	Parse(path string) (string, uint16, error)
+	Parse(path string) (string, uint16)
 }

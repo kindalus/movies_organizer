@@ -12,3 +12,11 @@ func NewStorageProvider() organizer.StorageProvider {
 func (m *storageProviderStub) DirExists(path string) (bool, error) {
 	return true, nil
 }
+
+func (m *storageProviderStub) Move(source string, destination string) error {
+	return nil
+}
+
+func (m *storageProviderStub) MkDir(path string) error {
+	return nil
+}

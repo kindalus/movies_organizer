@@ -34,19 +34,36 @@ func (o *Organizer) Organize(moviePath string) (string, error) {
 		return "", err
 	}
 
-	name, year, err := o.MoviePathParser.Parse(moviePath)
-	if err != nil {
-		return "", err
-	}
+	name, year := o.MoviePathParser.Parse(moviePath)
 
 	spec, err := o.MoviesDatabase.Find(name, year)
 	if err != nil {
 		return "", err
 	}
 
-	outputPath := path.Join(o.destinationPath, spec.Year, spec.Genre, path.Base(moviePath))
+	destinationPath := path.Join(o.destinationPath, spec.Year, spec.Genre)
+	if err := o.createFolderIfDoesntExist(destinationPath); err != nil {
+		return "", err
+	}
+
+	o.StorageProvider.Move(moviePath, destinationPath)
+
+	outputPath := path.Join(destinationPath, path.Base(moviePath))
 
 	return outputPath, nil
+}
+
+func (o *Organizer) createFolderIfDoesntExist(destinationPath string) error {
+	destinationExists, err := o.StorageProvider.DirExists(destinationPath)
+	if err != nil {
+		return err
+	}
+
+	if destinationExists {
+		return nil
+	}
+
+	return o.StorageProvider.MkDir(destinationPath)
 }
 
 func (o *Organizer) verifyDir(path string, onError error) error {

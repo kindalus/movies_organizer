@@ -68,6 +68,53 @@ func TestOrganizer_Organize(t *testing.T) {
 		assert.Equal(t, expectedOutput, output)
 	})
 
+	t.Run("Move o filme para a directoria destino", func(t *testing.T) {
+		destPath := "/downloads/movies"
+		moviePath := "/movies/Saving.Private.Ryan.1998.1080p"
+
+		storage := mocks.NewStorageProvider()
+		storage.On("DirExists", mock.Anything).Return(true, nil)
+		storage.On("Move", moviePath, path.Join(destPath, "1998", "Action")).Return(nil)
+
+		moviesOrganizer, _ := newOrganizer(organizer.OrganizerContext{StorageProvider: storage}, destPath)
+
+		_, err := moviesOrganizer.Organize(moviePath)
+
+		assert.Nil(t, err)
+		storage.AssertExpectations(t)
+	})
+
+	t.Run("Se a estrutura de directorias de destino não existir, deve ser criadas", func(t *testing.T) {
+		destPath := "/media/videos"
+		moviePath := "Along.Came.Polly.2001.720p"
+
+		storage := mocks.NewStorageProvider()
+		storage.On("DirExists", path.Join(destPath, "2001", "Comedy")).Return(false, nil)
+		storage.On("DirExists", mock.Anything).Return(true, nil)
+		storage.On("Move", mock.Anything, mock.Anything).Return(nil)
+		storage.On("MkDir", path.Join(destPath, "2001", "Comedy")).Return(nil)
+
+		mdb := mocks.NewMoviesDatabase()
+		mdb.On("Find", "Along Came Polly").
+			Return(&organizer.MovieSpec{Title: "Along Came Polly", Genre: "Comedy", Year: "2001"}, nil)
+
+		parser := mocks.NewMoviePathParser()
+		parser.On("Parse", moviePath).Return("Along Came Polly", 2001, nil)
+
+		moviesOrganizer, _ := newOrganizer(
+			organizer.OrganizerContext{
+				StorageProvider: storage,
+				MoviesDatabase:  mdb,
+				MoviePathParser: parser,
+			},
+			destPath)
+
+		_, err := moviesOrganizer.Organize(moviePath)
+
+		assert.Nil(t, err)
+		storage.AssertExpectations(t)
+	})
+
 }
 
 func newOrganizer(ctx organizer.OrganizerContext, basePath string) (*organizer.Organizer, error) {

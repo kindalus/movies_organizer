@@ -15,3 +15,15 @@ func (m *storageProviderMock) DirExists(path string) (bool, error) {
 
 	return args.Bool(0), args.Error(1)
 }
+
+func (m *storageProviderMock) Move(source string, destination string) error {
+	args := m.Called(source, destination)
+
+	return args.Error(0)
+}
+
+func (m *storageProviderMock) MkDir(path string) error {
+	args := m.Called(path)
+
+	return args.Error(0)
+}

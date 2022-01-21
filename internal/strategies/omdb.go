@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io"
 	"kindalus/movies_organizer/internal/organizer"
-	"kindalus/movies_organizer/pkg/coalesce"
+
+	"github.com/kindalus/gofunc/pkg/coalesce"
+
 	"net/http"
 	"strings"
 
@@ -86,7 +88,9 @@ func getOmdbUrl(url string, value interface{}) error {
 
 	response := new(omdbResponse)
 	if err := json.Unmarshal(data, response); err != nil || response.Response != "True" {
-		return coalesce.Coalesce(err, errors.New(response.Error))
+
+		return coalesce.NotNil(err, errors.New(response.Error))
+
 	}
 
 	if err := json.Unmarshal(data, value); err != nil {

@@ -4,10 +4,10 @@ import (
 	"kindalus/movies_organizer/internal/mocks"
 	"kindalus/movies_organizer/internal/organizer"
 	"kindalus/movies_organizer/internal/stubs"
-	. "kindalus/movies_organizer/pkg/coalesce"
 	"path"
 	"testing"
 
+	"github.com/kindalus/gofunc/pkg/coalesce"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -134,9 +134,9 @@ func TestOrganizer_Organize(t *testing.T) {
 func newOrganizer(ctx organizer.OrganizerContext, basePath string) (*organizer.Organizer, error) {
 	return organizer.New(
 		organizer.OrganizerContext{
-			StorageProvider: Coalesce(ctx.StorageProvider, stubs.NewStorageProvider()),
-			MoviesDatabase:  Coalesce(ctx.MoviesDatabase, stubs.NewMoviesDatabase()),
-			MoviePathParser: Coalesce(ctx.MoviePathParser, stubs.NewMoviePathParser()),
+			StorageProvider: coalesce.NotNil(ctx.StorageProvider, stubs.NewStorageProvider()),
+			MoviesDatabase:  coalesce.NotNil(ctx.MoviesDatabase, stubs.NewMoviesDatabase()),
+			MoviePathParser: coalesce.NotNil(ctx.MoviePathParser, stubs.NewMoviePathParser()),
 		},
 		basePath)
 }
